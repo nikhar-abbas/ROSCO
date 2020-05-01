@@ -282,4 +282,4 @@ CONTAINS
         LocalVar%FA_AccHPF = HPFilter(LocalVar%FA_Acc, LocalVar%DT, CntrPar%FA_HPFCornerFreq, LocalVar%iStatus, .FALSE., objInst%instHPF)
         
     END SUBROUTINE PreFilterMeasuredSignals
-    END MODULE Filters
+END MODULE Filters
