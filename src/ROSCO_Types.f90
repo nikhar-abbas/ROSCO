@@ -192,7 +192,8 @@ TYPE, PUBLIC :: LocalVariables
     REAL(8)                             :: Y_ErrLPFFast                 ! Filtered yaw error by fast low pass filter [rad].
     REAL(8)                             :: Y_ErrLPFSlow                 ! Filtered yaw error by slow low pass filter [rad].
     REAL(8)                             :: Y_MErr                       ! Measured yaw error, measured + setpoint [rad].
-    REAL(8)                             :: Y_YawEndT                    ! Yaw end time [s]. Indicates the time up until which yaw is active with a fixed rate
+    REAL(8)                             :: Y_YawEndT                    ! Yaw end time [s]. Indicates the time up until which yaw is active with a fixed rate                       ! Measured yaw error, measured + setpoint [rad].
+    REAL(8)                             :: Y_fN                         ! Yaw direction, from north [rad]
     LOGICAL(1)                          :: SD                           ! Shutdown, .FALSE. if inactive, .TRUE. if active
     REAL(8)                             :: Fl_PitCom                           ! Shutdown, .FALSE. if inactive, .TRUE. if active
     REAL(8)                             :: NACIMU_FA_AccF

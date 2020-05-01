@@ -305,6 +305,7 @@ CONTAINS
         LocalVar%GenTqMeas = avrSWAP(23)
         LocalVar%Y_M = avrSWAP(24)
         LocalVar%HorWindV = avrSWAP(27)
+        LocalVar%Y_fN = avrSWAP(37)
         LocalVar%rootMOOP(1) = avrSWAP(30)
         LocalVar%rootMOOP(2) = avrSWAP(31)
         LocalVar%rootMOOP(3) = avrSWAP(32)
@@ -435,37 +436,37 @@ CONTAINS
         ENDIF
         
         ! ---- Yaw Control ----
-        IF (CntrPar%Y_ControlMode > 0) THEN
-            IF (CntrPar%Y_IPC_omegaLP <= 0.0)  THEN
-                aviFAIL = -1
-                ErrMsg  = 'Y_IPC_omegaLP must be greater than zero.'
-            ENDIF
+        ! IF (CntrPar%Y_ControlMode > 0) THEN
+        !     IF (CntrPar%Y_IPC_omegaLP <= 0.0)  THEN
+        !         aviFAIL = -1
+        !         ErrMsg  = 'Y_IPC_omegaLP must be greater than zero.'
+        !     ENDIF
             
-            IF (CntrPar%Y_IPC_zetaLP <= 0.0)  THEN
-                aviFAIL = -1
-                ErrMsg  = 'Y_IPC_zetaLP must be greater than zero.'
-            ENDIF
+        !     IF (CntrPar%Y_IPC_zetaLP <= 0.0)  THEN
+        !         aviFAIL = -1
+        !         ErrMsg  = 'Y_IPC_zetaLP must be greater than zero.'
+        !     ENDIF
             
-            IF (CntrPar%Y_ErrThresh <= 0.0)  THEN
-                aviFAIL = -1
-                ErrMsg  = 'Y_ErrThresh must be greater than zero.'
-            ENDIF
+        !     IF (CntrPar%Y_ErrThresh <= 0.0)  THEN
+        !         aviFAIL = -1
+        !         ErrMsg  = 'Y_ErrThresh must be greater than zero.'
+        !     ENDIF
             
-            IF (CntrPar%Y_Rate <= 0.0)  THEN
-                aviFAIL = -1
-                ErrMsg  = 'CntrPar%Y_Rate must be greater than zero.'
-            ENDIF
+        !     IF (CntrPar%Y_Rate <= 0.0)  THEN
+        !         aviFAIL = -1
+        !         ErrMsg  = 'CntrPar%Y_Rate must be greater than zero.'
+        !     ENDIF
             
-            IF (CntrPar%Y_omegaLPFast <= 0.0)  THEN
-                aviFAIL = -1
-                ErrMsg  = 'Y_omegaLPFast must be greater than zero.'
-            ENDIF
+        !     IF (CntrPar%Y_omegaLPFast <= 0.0)  THEN
+        !         aviFAIL = -1
+        !         ErrMsg  = 'Y_omegaLPFast must be greater than zero.'
+        !     ENDIF
             
-            IF (CntrPar%Y_omegaLPSlow <= 0.0)  THEN
-                aviFAIL = -1
-                ErrMsg  = 'Y_omegaLPSlow must be greater than zero.'
-            ENDIF
-        ENDIF
+        !     ! IF (CntrPar%Y_omegaLPSlow <= 0.0)  THEN
+        !     !     aviFAIL = -1
+        !     !     ErrMsg  = 'Y_omegaLPSlow must be greater than zero.'
+        !     ! ENDIF
+        ! ENDIF
 
         ! --- Floating Control ---
         IF (CntrPar%Fl_Mode > 0) THEN
@@ -528,6 +529,8 @@ CONTAINS
         avrSWAP(79) = 0.0 ! Request for loads: 0=none
         avrSWAP(80) = 0.0 ! Variable slip current status
         avrSWAP(81) = 0.0 ! Variable slip current demand
+
+
         
         ! Read any External Controller Parameters specified in the User Interface
         !   and initialize variables:
@@ -551,6 +554,10 @@ CONTAINS
                 ! print *, 'Version 1.0.1: pretty debug'
 
             CALL ReadControlParameterFileSub(CntrPar, accINFILE, NINT(avrSWAP(50)))
+
+            IF (CntrPar%Y_ControlMode == 1) THEN
+                avrSWAP(29) = 0.0  ! Yaw control parameter: 0 = yaw rate control
+            ENDIF
 
             IF (CntrPar%WE_Mode > 0) THEN
                 CALL READCpFile(CntrPar,PerfData)
