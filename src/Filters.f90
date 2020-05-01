@@ -298,4 +298,4 @@ CONTAINS
         LocalVar%PC_PitComTF = LPFilter(LocalVar%PC_PitComT, LocalVar%dt, CntrPar%F_LPFCornerFreq, LocalVar%iStatus, .FALSE., objInst%instLPF)
 
     END SUBROUTINE PreFilterMeasuredSignals
-    END MODULE Filters
+END MODULE Filters
