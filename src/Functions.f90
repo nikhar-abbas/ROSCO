@@ -493,10 +493,12 @@ CONTAINS
         ! If we're debugging, open the debug file and write the header:
             IF (CntrPar%LoggingLevel > 0) THEN
                 OPEN(unit=UnDb, FILE='DEBUG.dbg')
-                WRITE (UnDb,'(A)')  '   Time '  //Tab//' GenSpeedF    ' //Tab//' WE_Vw    '  //Tab//' NacIMU_FA_Acc    ' //Tab//' FA_Acc    '   //Tab//' Fl_Pitcom    ' //Tab//' test    '
-                WRITE (UnDb,'(A)')  '   (sec) '  //Tab//'(m/s) ' //Tab//'(rad) ' //Tab//'(rad/s^2) ' //Tab//'(m/s^2) '//Tab//'(rad) ' //Tab//'(rad/s) ' 
+                WRITE (UnDb,'(A)')  '   Time '  //Tab//' GenSpeedF    ' //Tab//' WE_Vw    '  //Tab//' WindDir    ' //Tab//' NacVane    '   //Tab//' Yaw_err    ' //Tab//' Y_Angle    ' //Tab//' YawRateCome    '
+                WRITE (UnDb,'(A)')  '   (sec) '  //Tab//'(m/s) '        //Tab//'(rad) '      //Tab//'(rad) '       //Tab//'(rad) '         //Tab//'(rad) '      //Tab//'(rad) ' //Tab//'(rad/s) ' 
             END IF
             
+
+
             IF (CntrPar%LoggingLevel > 1) THEN
                 OPEN(unit=UnDb2, FILE='DEBUG2.dbg')
                 WRITE(UnDb2,'(/////)')
@@ -517,7 +519,7 @@ CONTAINS
             
             ! Output debugging information if requested:
             IF (CntrPar%LoggingLevel > 0) THEN
-                WRITE (UnDb,FmtDat)     LocalVar%Time, LocalVar%GenSpeedF, LocalVar%WE_Vw, LocalVar%NacIMU_FA_Acc, LocalVar%FA_Acc, LocalVar%Fl_PitCom, LocalVar%TestType
+                WRITE (UnDb,FmtDat)     LocalVar%Time, LocalVar%GenSpeedF, LocalVar%WE_Vw, LocalVar%WindDir, LocalVar%NacVane, LocalVar%Yaw_err, LocalVar%Y_Angle, LocalVar%YawRateCom
             END IF
             
             IF (CntrPar%LoggingLevel > 1) THEN

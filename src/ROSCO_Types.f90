@@ -200,6 +200,13 @@ TYPE, PUBLIC :: LocalVariables
     REAL(4)                             :: Fl_PitCom                           ! Shutdown, .FALSE. if inactive, .TRUE. if active
     REAL(4)                             :: NACIMU_FA_AccF
     REAL(4)                             :: Flp_Angle(3)                 ! Flap Angle (rad)
+
+    ! TEMP
+    REAL(4) :: WindDir
+    REAL(4) :: NacVane
+    REAL(4) :: Yaw_err
+    REAL(4) :: YawRateCom
+
     END TYPE LocalVariables
 
 TYPE, PUBLIC :: ObjectInstances
