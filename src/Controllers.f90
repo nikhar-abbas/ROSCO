@@ -296,6 +296,12 @@ CONTAINS
             avrSWAP(48) = YawRateCom       
             LocalVar%Y_Angle = Yaw
 
+            ! Save for debug
+            LocalVar%YawRateCom = YawRateCom
+            LocalVar%WindDir = WindDir
+            LocalVar%NacVane = NacVane
+            LocalVar%Yaw_err = Y_Err
+
         END IF
     END SUBROUTINE YawRateControl
 !-------------------------------------------------------------------------------------------------------------------------------

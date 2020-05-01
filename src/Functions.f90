@@ -551,6 +551,8 @@ CONTAINS
                 WRITE (UnDb,'(99(a10,TR5:))') '(sec)',  DebugOutUnits
             END IF
             
+
+
             IF (CntrPar%LoggingLevel > 1) THEN
                 OPEN(unit=UnDb2, FILE='DEBUG2.dbg')
                 WRITE(UnDb2,'(/////)')
@@ -569,11 +571,7 @@ CONTAINS
                 ENDIF
             END IF
             
-        ENDIF
 
-        ! Write debug files
-        IF (CntrPar%LoggingLevel > 0) THEN
-            WRITE (UnDb,FmtDat)  LocalVar%Time, DebugOutData
         END IF
 
         IF (CntrPar%LoggingLevel > 1) THEN
