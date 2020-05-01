@@ -294,6 +294,7 @@ CONTAINS
 
             ! Output yaw rate command
             avrSWAP(48) = YawRateCom       
+            LocalVar%Y_Angle = Yaw
 
         END IF
     END SUBROUTINE YawRateControl
