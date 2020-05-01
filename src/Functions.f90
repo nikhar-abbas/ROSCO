@@ -432,10 +432,10 @@ CONTAINS
         
         ! Find Torque
         RotorArea = PI*CntrPar%WE_BladeRadius**2
-        Lambda = LocalVar%RotSpeed*CntrPar%WE_BladeRadius/LocalVar%WE_Vw
+        Lambda = LocalVar%RotSpeedF*CntrPar%WE_BladeRadius/LocalVar%WE_Vw
         ! Cp = CPfunction(CntrPar%WE_CP, Lambda)
-        Cp = interp2d(PerfData%Beta_vec,PerfData%TSR_vec,PerfData%Cp_mat, LocalVar%BlPitch(1)*R2D, Lambda)
-        AeroDynTorque = 0.5*(CntrPar%WE_RhoAir*RotorArea)*(LocalVar%WE_Vw**3/LocalVar%RotSpeed)*Cp
+        Cp = interp2d(PerfData%Beta_vec,PerfData%TSR_vec,PerfData%Cp_mat, LocalVar%PC_PitComTF*R2D, Lambda)
+        AeroDynTorque = 0.5*(CntrPar%WE_RhoAir*RotorArea)*(LocalVar%WE_Vw**3/LocalVar%RotSpeedF)*Cp
         AeroDynTorque = MAX(AeroDynTorque, 0.0)
         
     END FUNCTION AeroDynTorque
@@ -493,7 +493,7 @@ CONTAINS
         ! If we're debugging, open the debug file and write the header:
             IF (CntrPar%LoggingLevel > 0) THEN
                 OPEN(unit=UnDb, FILE='DEBUG.dbg')
-                WRITE (UnDb,'(A)')  '   Time '  //Tab//' NacIMU_FA_AccF    ' //Tab//' WE_Vw    '  //Tab//' NacIMU_FA_Acc    ' //Tab//' FA_Acc    '   //Tab//' Fl_Pitcom    ' //Tab//' test    '
+                WRITE (UnDb,'(A)')  '   Time '  //Tab//' GenSpeedF    ' //Tab//' WE_Vw    '  //Tab//' NacIMU_FA_Acc    ' //Tab//' FA_Acc    '   //Tab//' Fl_Pitcom    ' //Tab//' test    '
                 WRITE (UnDb,'(A)')  '   (sec) '  //Tab//'(m/s) ' //Tab//'(rad) ' //Tab//'(rad/s^2) ' //Tab//'(m/s^2) '//Tab//'(rad) ' //Tab//'(rad/s) ' 
             END IF
             
@@ -517,7 +517,7 @@ CONTAINS
             
             ! Output debugging information if requested:
             IF (CntrPar%LoggingLevel > 0) THEN
-                WRITE (UnDb,FmtDat)     LocalVar%Time, LocalVar%NacIMU_FA_AccF, LocalVar%WE_Vw, LocalVar%NacIMU_FA_Acc, LocalVar%FA_Acc, LocalVar%Fl_PitCom, LocalVar%TestType
+                WRITE (UnDb,FmtDat)     LocalVar%Time, LocalVar%GenSpeedF, LocalVar%WE_Vw, LocalVar%NacIMU_FA_Acc, LocalVar%FA_Acc, LocalVar%Fl_PitCom, LocalVar%TestType
             END IF
             
             IF (CntrPar%LoggingLevel > 1) THEN
