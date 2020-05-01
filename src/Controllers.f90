@@ -198,7 +198,7 @@ CONTAINS
     SUBROUTINE YawRateControl(avrSWAP, CntrPar, LocalVar, objInst)
         ! Yaw rate controller
         !       Y_ControlMode = 0, No yaw control
-        !       Y_ControlMode = 1, Simple yaw rate control using yaw drive
+        !       Y_ControlMode = 1, Yaw rate control using yaw drive
         !       Y_ControlMode = 2, Yaw by IPC (accounted for in IPC subroutine)
         USE ROSCO_Types, ONLY : ControlParameters, LocalVariables, ObjectInstances
     
@@ -208,29 +208,92 @@ CONTAINS
         TYPE(LocalVariables), INTENT(INOUT)       :: LocalVar
         TYPE(ObjectInstances), INTENT(INOUT)      :: objInst
         
-        !..............................................................................................................................
-        ! Yaw control
-        !..............................................................................................................................
+        ! Allocate Variables
+        REAL(4), SAVE :: offset                                 ! For offset control (unused)
+        REAL(4), SAVE :: Yaw                                    ! Current yaw command--separate from YawPos--that dictates the commanded yaw position and should stay fixed for YawState==0; if the input YawPos is used, then it effectively allows the nacelle to freely rotate rotate
+        REAL(4), SAVE :: NacVane                                ! Current wind vane measurement (deg)
+        REAL(4), SAVE :: NacVaneOffset                          ! For offset control (unused)
+        REAL(4), SAVE :: WindDirCosF, WindDirSinF, WindDirF     ! Filtered wind direction (deg)
+        INTEGER, SAVE :: WindDir                                ! Wind direction (deg)
+        INTEGER, SAVE :: WindDir_n                              ! Update wind direction after accounting for offset (deg)
+        INTEGER, SAVE :: YawState                               ! Yawing left(-1), right(1), or stopped(0)
+        REAL(4), SAVE :: Y_Err                                  ! Yaw error (deg)
+        REAL(4)       :: YawRateCom                             ! Commanded yaw rate
         
         IF (CntrPar%Y_ControlMode == 1) THEN
-            avrSWAP(29) = 0                                      ! Yaw control parameter: 0 = yaw rate control
-            IF (LocalVar%Time >= LocalVar%Y_YawEndT) THEN        ! Check if the turbine is currently yawing
-                avrSWAP(48) = 0.0                                ! Set yaw rate to zero
+
+            ! Compass wind directions in degrees
+            WindDir = (LocalVar%Y_fN + LocalVar%Y_M) * R2D
+
+            ! Initialize
+            IF (LocalVar%iStatus == 0) THEN
+                Yaw = 0.0 
+                NacVane = 0.0
+                NacVaneOffset = 0.0
+                WindDirCosF = cos(WindDir*D2R)
+                WindDirSinF = sin(WindDir*D2R)
+                WindDirF = WindDir
+                YawState = 0
+                offset = 0.0
+            ENDIF
             
-                LocalVar%Y_ErrLPFFast = LPFilter(LocalVar%Y_MErr, LocalVar%DT, CntrPar%Y_omegaLPFast, LocalVar%iStatus, .FALSE., objInst%instLPF)        ! Fast low pass filtered yaw error with a frequency of 1
-                LocalVar%Y_ErrLPFSlow = LPFilter(LocalVar%Y_MErr, LocalVar%DT, CntrPar%Y_omegaLPSlow, LocalVar%iStatus, .FALSE., objInst%instLPF)        ! Slow low pass filtered yaw error with a frequency of 1/60
+            ! Compute wind vane
+            NacVane = wrap_180(WindDir - Yaw)      ! Measured yaw error 
             
-                LocalVar%Y_AccErr = LocalVar%Y_AccErr + LocalVar%DT*SIGN(LocalVar%Y_ErrLPFFast**2, LocalVar%Y_ErrLPFFast)    ! Integral of the fast low pass filtered yaw error
+            ! Compute/apply offset
+            offset = 0.0 ! placeholder for offset controller
+            NacVaneOffset = NacVane - offset ! (deg)
             
-                IF (ABS(LocalVar%Y_AccErr) >= CntrPar%Y_ErrThresh) THEN                                   ! Check if accumulated error surpasses the threshold
-                    LocalVar%Y_YawEndT = ABS(LocalVar%Y_ErrLPFSlow/CntrPar%Y_Rate) + LocalVar%Time        ! Yaw to compensate for the slow low pass filtered error
-                END IF
+            ! Update filtered wind direction
+            WindDir_n = wrap_360(WindDir - offset) ! (deg)
+            WindDirCosF = LPFilter(cos(WindDir_n*D2R), LocalVar%DT, CntrPar%Y_omegaLPFast, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
+            WindDirSinF = LPFilter(sin(WindDir_n*D2R), LocalVar%DT, CntrPar%Y_omegaLPFast, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
+            WindDirF = wrap_360(atan2(WindDirSinF, WindDirCosF) * R2D) ! (deg)
+
+            ! ---- Now get into the guts of the control ----
+            ! Yaw error
+            Y_Err = wrap_180(WindDirF - Yaw)
+
+            ! yawing right
+            IF (YawState == 1) THEN 
+                IF (Y_Err .le. 0) THEN
+                    ! stop yawing
+                    YawRateCom = 0.0
+                    YawState = 0 
+                ELSE
+                    ! persist
+                    Yaw = wrap_360(Yaw + CntrPar%Y_Rate*R2D*LocalVar%DT)
+                    YawRateCom = CntrPar%Y_Rate
+                    YawState = 1 
+                ENDIF
+            ! yawing left
+            ELSEIF (YawState == -1) THEN 
+                IF (Y_Err .ge. 0) THEN
+                    ! stop yawing
+                    YawRateCom = 0.0
+                    YawState = 0 
+                ELSE
+                    ! persist
+                    Yaw = wrap_360(Yaw - CntrPar%Y_Rate*R2D*LocalVar%DT)
+                    YawRateCom = -CntrPar%Y_Rate
+                    YawState = -1 
+                ENDIF
+            ! Initiate yaw if outside yaw error threshold
             ELSE
-                avrSWAP(48) = SIGN(CntrPar%Y_Rate, LocalVar%Y_MErr)        ! Set yaw rate to predefined yaw rate, the sign of the error is copied to the rate
-                LocalVar%Y_ErrLPFFast = LPFilter(LocalVar%Y_MErr, LocalVar%DT, CntrPar%Y_omegaLPFast, LocalVar%iStatus, .TRUE., objInst%instLPF)        ! Fast low pass filtered yaw error with a frequency of 1
-                LocalVar%Y_ErrLPFSlow = LPFilter(LocalVar%Y_MErr, LocalVar%DT, CntrPar%Y_omegaLPSlow, LocalVar%iStatus, .TRUE., objInst%instLPF)        ! Slow low pass filtered yaw error with a frequency of 1/60
-                LocalVar%Y_AccErr = 0.0    ! "
-            END IF
+                IF (Y_Err .gt. CntrPar%Y_ErrThresh) THEN
+                    YawState = 1 ! yaw right
+                ENDIF
+
+                IF (Y_Err .lt. -CntrPar%Y_ErrThresh) THEN
+                    YawState = -1 ! yaw left
+                ENDIF
+
+                YawRateCom = 0.0 ! if YawState is not 0, start yawing on the next time step
+            ENDIF
+
+            ! Output yaw rate command
+            avrSWAP(48) = YawRateCom       
+
         END IF
     END SUBROUTINE YawRateControl
 !-------------------------------------------------------------------------------------------------------------------------------
