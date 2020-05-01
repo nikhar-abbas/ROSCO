@@ -275,11 +275,11 @@ CONTAINS
                 ENDIF
             ! Initiate yaw if outside yaw error threshold
             ELSE
-                IF (Y_Err .gt. CntrPar%Y_ErrThresh) THEN
+                IF (Y_Err .gt. CntrPar%Y_ErrThresh*R2D) THEN
                     YawState = 1 ! yaw right
                 ENDIF
 
-                IF (Y_Err .lt. -CntrPar%Y_ErrThresh) THEN
+                IF (Y_Err .lt. -CntrPar%Y_ErrThresh*R2D) THEN
                     YawState = -1 ! yaw left
                 ENDIF
 
