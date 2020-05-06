@@ -77,6 +77,7 @@ CONTAINS
         ALLOCATE(CntrPar%F_NotchBetaNumDen(2))
         READ(UnControllerParameters,*) CntrPar%F_NotchBetaNumDen
         READ(UnControllerParameters,*) CntrPar%F_SSCornerFreq
+        READ(UnControllerParameters, *) CntrPar%F_YawErr
         READ(UnControllerParameters,*) CntrPar%F_FlCornerFreq, CntrPar%F_FlDamping
         READ(UnControllerParameters,*) CntrPar%F_FlpCornerFreq, CntrPar%F_FlpDamping
         READ(UnControllerParameters, *)
@@ -161,7 +162,11 @@ CONTAINS
 
         !-------------- YAW CONTROLLER CONSTANTS -----------------
         READ(UnControllerParameters, *)
+        READ(UnControllerParameters, *) CntrPar%Y_uSwitch
+        ALLOCATE(CntrPar%Y_ErrThresh(2))
         READ(UnControllerParameters, *) CntrPar%Y_ErrThresh
+        READ(UnControllerParameters, *) CntrPar%Y_Rate
+        READ(UnControllerParameters, *) CntrPar%Y_MErrSet
         READ(UnControllerParameters, *) CntrPar%Y_IPC_IntSat
         READ(UnControllerParameters, *) CntrPar%Y_IPC_n
         ALLOCATE(CntrPar%Y_IPC_KP(CntrPar%Y_IPC_n))
@@ -170,10 +175,6 @@ CONTAINS
         READ(UnControllerParameters,*) CntrPar%Y_IPC_KI
         READ(UnControllerParameters, *) CntrPar%Y_IPC_omegaLP
         READ(UnControllerParameters, *) CntrPar%Y_IPC_zetaLP
-        READ(UnControllerParameters, *) CntrPar%Y_MErrSet
-        READ(UnControllerParameters, *) CntrPar%Y_omegaLPFast
-        READ(UnControllerParameters, *) CntrPar%Y_omegaLPSlow
-        READ(UnControllerParameters, *) CntrPar%Y_Rate
         READ(UnControllerParameters, *)
 
         !------------ FORE-AFT TOWER DAMPER CONSTANTS ------------

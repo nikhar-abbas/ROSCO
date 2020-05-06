@@ -210,7 +210,6 @@ CONTAINS
         TYPE(ObjectInstances), INTENT(INOUT)      :: objInst
         
         ! Allocate Variables
-        REAL(4), SAVE :: offset                                 ! For offset control (unused)
         REAL(4), SAVE :: Yaw                                    ! Current yaw command--separate from YawPos--that dictates the commanded yaw position and should stay fixed for YawState==0; if the input YawPos is used, then it effectively allows the nacelle to freely rotate rotate
         REAL(4), SAVE :: NacVane                                ! Current wind vane measurement (deg)
         REAL(4), SAVE :: NacVaneOffset                          ! For offset control (unused)
@@ -235,20 +234,18 @@ CONTAINS
                 WindDirSinF = sin(WindDir*D2R)
                 WindDirF = WindDir
                 YawState = 0
-                offset = 0.0
             ENDIF
             
             ! Compute wind vane
             NacVane = wrap_180(WindDir - Yaw)      ! Measured yaw error 
             
             ! Compute/apply offset
-            offset = 0.0 ! placeholder for offset controller
-            NacVaneOffset = NacVane - offset ! (deg)
+            NacVaneOffset = NacVane - CntrPar%Y_MErrSet ! (deg)
             
             ! Update filtered wind direction
-            WindDir_n = wrap_360(WindDir - offset) ! (deg)
-            WindDirCosF = LPFilter(cos(WindDir_n*D2R), LocalVar%DT, CntrPar%Y_omegaLPFast, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
-            WindDirSinF = LPFilter(sin(WindDir_n*D2R), LocalVar%DT, CntrPar%Y_omegaLPFast, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
+            WindDir_n = wrap_360(WindDir - CntrPar%Y_MErrSet) ! (deg)
+            WindDirCosF = LPFilter(cos(WindDir_n*D2R), LocalVar%DT, CntrPar%F_YawErr, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
+            WindDirSinF = LPFilter(sin(WindDir_n*D2R), LocalVar%DT, CntrPar%F_YawErr, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
             WindDirF = wrap_360(atan2(WindDirSinF, WindDirCosF) * R2D) ! (deg)
 
             ! ---- Now get into the guts of the control ----

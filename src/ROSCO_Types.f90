@@ -96,17 +96,9 @@ TYPE, PUBLIC :: ControlParameters
     REAL(8), DIMENSION(:), ALLOCATABLE  :: WE_FOPoles                   ! First order system poles
 
     INTEGER(4)                          :: Y_ControlMode                ! Yaw control mode {0: no yaw control, 1: yaw rate control, 2: yaw-by-IPC}
-    REAL(8)                             :: Y_ErrThresh                  ! Error threshold [rad]. Turbine begins to yaw when it passes this. (104.71975512) -- 1.745329252
-    REAL(8)                             :: Y_IPC_IntSat                 ! Integrator saturation (maximum signal amplitude contrbution to pitch from yaw-by-IPC)
+
     INTEGER(4)                          :: Y_IPC_n                      ! Number of controller gains (yaw-by-IPC)
-    REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_IPC_KP                     ! Yaw-by-IPC proportional controller gain Kp
-    REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_IPC_KI                     ! Yaw-by-IPC integral controller gain Ki
-    REAL(8)                             :: Y_IPC_omegaLP                ! Low-pass filter corner frequency for the Yaw-by-IPC controller to filtering the yaw alignment error, [rad/s].
-    REAL(8)                             :: Y_IPC_zetaLP                 ! Low-pass filter damping factor for the Yaw-by-IPC controller to filtering the yaw alignment error, [-].
-    REAL(8)                             :: Y_MErrSet                    ! Yaw alignment error, setpoint [rad]
-    REAL(8)                             :: Y_omegaLPFast                ! Corner frequency fast low pass filter, 1.0 [Hz]
-    REAL(8)                             :: Y_omegaLPSlow                ! Corner frequency slow low pass filter, 1/60 [Hz]
-    REAL(8)                             :: Y_Rate                       ! Yaw rate [rad/s]
+
     
     INTEGER(4)                          :: PS_Mode                      ! Pitch saturation mode {0: no peak shaving, 1: implement pitch saturation}
     INTEGER(4)                          :: PS_BldPitchMin_N             ! Number of values in minimum blade pitch lookup table (should equal number of values in PS_WindSpeeds and PS_BldPitchMin)
