@@ -227,11 +227,11 @@ CONTAINS
         IF (CntrPar%Y_ControlMode == 1) THEN
 
             ! Compass wind directions in degrees
-            WindDir = (LocalVar%Y_fN + LocalVar%Y_M) * R2D
+            WindDir = (LocalVar%Nac_YawNorth + LocalVar%Y_M) * R2D
 
             ! Initialize
             IF (LocalVar%iStatus == 0) THEN
-                Yaw = 0.0 
+                Yaw = LocalVar%Nac_YawNorth
                 NacVane = 0.0
                 NacVaneOffset = 0.0
                 WindDirCosF = cos(WindDir*D2R)

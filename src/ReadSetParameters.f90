@@ -306,7 +306,7 @@ CONTAINS
         LocalVar%GenTqMeas = avrSWAP(23)
         LocalVar%Y_M = avrSWAP(24)
         LocalVar%HorWindV = avrSWAP(27)
-        LocalVar%Y_fN = avrSWAP(37)
+        LocalVar%Nac_YawNorth = avrSWAP(37)
         LocalVar%rootMOOP(1) = avrSWAP(30)
         LocalVar%rootMOOP(2) = avrSWAP(31)
         LocalVar%rootMOOP(3) = avrSWAP(32)
