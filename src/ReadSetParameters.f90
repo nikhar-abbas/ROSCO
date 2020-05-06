@@ -590,6 +590,11 @@ CONTAINS
             ENDIF            
             LocalVar%VS_LastGenTrq = LocalVar%GenTq       
             
+            ! Check yaw error definitions
+            IF (CntrPar%Y_uSwitch == 0.0) THEN
+                CntrPar%Y_ErrThresh(2) = CntrPar%Y_ErrThresh(1)
+            ENDIF
+            
             ! Check validity of input parameters:
             CALL Assert(LocalVar, CntrPar, avrSWAP, aviFAIL, ErrMsg, size_avcMSG)
             

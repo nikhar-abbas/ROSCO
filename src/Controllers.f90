@@ -201,6 +201,9 @@ CONTAINS
         !       Y_ControlMode = 0, No yaw control
         !       Y_ControlMode = 1, Yaw rate control using yaw drive
         !       Y_ControlMode = 2, Yaw by IPC (accounted for in IPC subroutine)
+
+        ! TODO: Lots of R2D->D2R, this should be cleaned up.
+        ! TODO: The constant offset implementation is sort of circular here as a setpoint is already being defined in SetVariablesSetpoints. This could also use cleanup
         USE ROSCO_Types, ONLY : ControlParameters, LocalVariables, ObjectInstances
     
         REAL(C_FLOAT), INTENT(INOUT) :: avrSWAP(*) ! The swap array, used to pass data to, and receive data from, the DLL controller.
@@ -219,6 +222,7 @@ CONTAINS
         INTEGER, SAVE :: YawState                               ! Yawing left(-1), right(1), or stopped(0)
         REAL(4), SAVE :: Y_Err                                  ! Yaw error (deg)
         REAL(4)       :: YawRateCom                             ! Commanded yaw rate
+        REAL(4)       :: deadband                               ! Allowable yaw error deadband (rad)
         
         IF (CntrPar%Y_ControlMode == 1) THEN
 
@@ -252,6 +256,13 @@ CONTAINS
             ! Yaw error
             Y_Err = wrap_180(WindDirF - Yaw)
 
+            ! Check for deadband
+            IF (LocalVar%WE_Vw_F .le. CntrPar%Y_uSwitch) THEN
+                deadband = CntrPar%Y_ErrThresh(1)
+            ELSE
+                deadband = CntrPar%Y_ErrThresh(2)
+            ENDIF
+
             ! yawing right
             IF (YawState == 1) THEN 
                 IF (Y_Err .le. 0) THEN
@@ -278,11 +289,11 @@ CONTAINS
                 ENDIF
             ! Initiate yaw if outside yaw error threshold
             ELSE
-                IF (Y_Err .gt. CntrPar%Y_ErrThresh*R2D) THEN
+                IF (Y_Err .gt. deadband*R2D) THEN
                     YawState = 1 ! yaw right
                 ENDIF
 
-                IF (Y_Err .lt. -CntrPar%Y_ErrThresh*R2D) THEN
+                IF (Y_Err .lt. -deadband*R2D) THEN
                     YawState = -1 ! yaw left
                 ENDIF
 
