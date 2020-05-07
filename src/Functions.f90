@@ -571,7 +571,6 @@ CONTAINS
                 ENDIF
             END IF
             
-
         END IF
 
         IF (CntrPar%LoggingLevel > 1) THEN
