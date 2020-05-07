@@ -216,10 +216,10 @@ CONTAINS
         REAL(4), SAVE :: Yaw                                    ! Current yaw command--separate from YawPos--that dictates the commanded yaw position and should stay fixed for YawState==0; if the input YawPos is used, then it effectively allows the nacelle to freely rotate rotate
         REAL(4), SAVE :: NacVane                                ! Current wind vane measurement (deg)
         REAL(4), SAVE :: NacVaneOffset                          ! For offset control (unused)
-        REAL(4), SAVE :: WindDirCosF, WindDirSinF, WindDirF     ! Filtered wind direction (deg)
-        INTEGER, SAVE :: WindDir                                ! Wind direction (deg)
-        INTEGER, SAVE :: WindDir_n                              ! Update wind direction after accounting for offset (deg)
         INTEGER, SAVE :: YawState                               ! Yawing left(-1), right(1), or stopped(0)
+        REAL(4)       :: WindDirCosF, WindDirSinF, WindDirF     ! Filtered wind direction (deg)
+        REAL(4)       :: WindDir                                ! Wind direction (deg)
+        REAL(4)       :: WindDir_n                              ! Update wind direction after accounting for offset (deg)
         REAL(4), SAVE :: Y_Err                                  ! Yaw error (deg)
         REAL(4)       :: YawRateCom                             ! Commanded yaw rate
         REAL(4)       :: deadband                               ! Allowable yaw error deadband (rad)
@@ -228,15 +228,10 @@ CONTAINS
 
             ! Compass wind directions in degrees
             WindDir = (LocalVar%Nac_YawNorth + LocalVar%Y_M) * R2D
-
+            
             ! Initialize
             IF (LocalVar%iStatus == 0) THEN
                 Yaw = LocalVar%Nac_YawNorth
-                NacVane = 0.0
-                NacVaneOffset = 0.0
-                WindDirCosF = cos(WindDir*D2R)
-                WindDirSinF = sin(WindDir*D2R)
-                WindDirF = WindDir
                 YawState = 0
             ENDIF
             
