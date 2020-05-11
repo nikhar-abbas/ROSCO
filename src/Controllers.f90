@@ -236,7 +236,7 @@ CONTAINS
             ENDIF
             
             ! Compute wind vane
-            NacVane = wrap_180(WindDir - Yaw)      ! Measured yaw error 
+            NacVane = wrap_180(WindDir + Yaw)      ! Measured yaw error 
             
             ! Compute/apply offset
             NacVaneOffset = NacVane - CntrPar%Y_MErrSet ! (deg)
