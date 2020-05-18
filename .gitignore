@@ -18,3 +18,7 @@ Scripts/CompileDISCONHereCopyRun\.cmd
 *~
 .DS_Store
 *.u2d
+
+# Matlab
+*slprj
+*.slxc
