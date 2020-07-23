@@ -79,8 +79,11 @@ CONTAINS
             
             ! --- Torque control state machine ---
             IF (LocalVar%PC_PitComT >= LocalVar%VS_Rgn3Pitch) THEN       
-
-                IF (CntrPar%VS_ControlMode == 1) THEN                   ! Region 3
+                
+                IF (CntrPar%VS_ControlMode == 3) THEN
+                    LocalVar%VS_State = 6
+                    ! print *,'VS_State = 6'
+                ELSEIF (CntrPar%VS_ControlMode == 1) THEN                   ! Region 3
                     LocalVar%VS_State = 5 ! Constant power tracking
                 ELSE 
                     LocalVar%VS_State = 4 ! Constant torque tracking

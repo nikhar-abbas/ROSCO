@@ -183,6 +183,8 @@ TYPE, PUBLIC :: LocalVariables
     REAL(8)                             :: VS_SpdErr                    ! Current speed error for tip-speed-ratio tracking controller (generator torque control) [rad/s].
     INTEGER(4)                          :: VS_State                     ! State of the torque control system
     REAL(8)                             :: VS_Rgn3Pitch                 ! Pitch angle at which the state machine switches to region 3, [rad].
+    REAL(8)                             :: GenTq_cOm                 ! Generator torque command for PI constant power above rated, [Nm]
+    REAL(8)                             :: VS_SpdErrOm                 ! Generator speed error for constant power above rated, [rad/s].
     REAL(8)                             :: WE_Vw                        ! Estimated wind speed [m/s]
     REAL(8)                             :: WE_Vw_F                      ! Filtered estimated wind speed [m/s]
     REAL(8)                             :: WE_VwI                       ! Integrated wind speed quantity for estimation [m/s]
