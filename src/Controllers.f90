@@ -166,7 +166,7 @@ CONTAINS
             ! Update PI loops for region 1.5 and 2.5 PI control
             LocalVar%GenArTq = PIController(LocalVar%VS_SpdErrAr, CntrPar%VS_KP(1), CntrPar%VS_KI(1), CntrPar%VS_MaxOMTq, CntrPar%VS_ArSatTq, LocalVar%DT, CntrPar%VS_MaxOMTq, .FALSE., objInst%instPI)
             LocalVar%GenBrTq = PIController(LocalVar%VS_SpdErrBr, CntrPar%VS_KP(1), CntrPar%VS_KI(1), CntrPar%VS_MinTq, CntrPar%VS_MinOMTq, LocalVar%DT, CntrPar%VS_MinOMTq, .FALSE., objInst%instPI)
-            LocalVar%GenTq_cOm = PIController(LocalVar%VS_SpdErrOm, CntrPar%VS_KP(1), CntrPar%VS_KI(1), CntrPar%VS_RtTq*0.8, CntrPar%VS_RtTq*1.05, LocalVar%DT, CntrPar%VS_RtTq, .FALSE., objInst%instPI)
+            LocalVar%GenTq_cOm = PIController(LocalVar%VS_SpdErrOm, CntrPar%VS_KP(1), CntrPar%VS_KI(1), CntrPar%VS_RtTq*0.8, CntrPar%VS_RtTq*1.08, LocalVar%DT, CntrPar%VS_RtTq, .FALSE., objInst%instPI)
 
             ! The action
             IF (LocalVar%VS_State == 1) THEN ! Region 1.5
