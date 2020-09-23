@@ -189,8 +189,8 @@ CONTAINS
                 F(1,1) = A_op
                 F(1,2) = 1.0/(2.0*CntrPar%WE_Jtot) * CntrPar%WE_RhoAir * PI *CntrPar%WE_BladeRadius**2.0 * Cp_op * 3.0 * v_h**2.0 * 1.0/om_r
                 F(1,3) = 1.0/(2.0*CntrPar%WE_Jtot) * CntrPar%WE_RhoAir * PI *CntrPar%WE_BladeRadius**2.0 * Cp_op * 3.0 * v_h**2.0 * 1.0/om_r
-                F(2,2) = PI * v_m/(2.0*L)
-                F(2,3) = PI * v_t/(2.0*L)
+                F(2,2) = - PI * v_m/(2.0*L)
+                F(2,3) = - PI * v_t/(2.0*L)
 
                 ! Update process noise covariance
                 Q(1,1) = 0.00001
@@ -221,14 +221,14 @@ CONTAINS
                 v_h = v_t + v_m
                 LocalVar%WE_Vw = v_m + v_t
 
+                ! Debug Outputs
+                DebugVar%WE_Cp = Cp_op
+                DebugVar%WE_Vm = v_m
+                DebugVar%WE_Vt = v_t
+                DebugVar%WE_lambda = lambda
+                DebugVar%WE_F12 = F(1,2)
+                DebugVar%WE_F13 = F(1,3)
             ENDIF
-            ! Debug Outputs
-            DebugVar%WE_Cp = Cp_op
-            DebugVar%WE_Vm = v_m
-            DebugVar%WE_Vt = v_t
-            DebugVar%WE_lambda = lambda
-            DebugVar%WE_F12 = F(1,2)
-            DebugVar%WE_F13 = F(1,3)
 
         ELSE        
             ! Define Variables

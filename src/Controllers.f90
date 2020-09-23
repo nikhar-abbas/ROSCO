@@ -213,16 +213,16 @@ CONTAINS
         TYPE(ObjectInstances), INTENT(INOUT)      :: objInst
         
         ! Allocate Variables
-        REAL(4), SAVE :: Yaw                                    ! Current yaw command--separate from YawPos--that dictates the commanded yaw position and should stay fixed for YawState==0; if the input YawPos is used, then it effectively allows the nacelle to freely rotate rotate
-        REAL(4), SAVE :: NacVane                                ! Current wind vane measurement (deg)
-        REAL(4), SAVE :: NacVaneOffset                          ! For offset control (unused)
+        REAL(8), SAVE :: Yaw                                    ! Current yaw command--separate from YawPos--that dictates the commanded yaw position and should stay fixed for YawState==0; if the input YawPos is used, then it effectively allows the nacelle to freely rotate rotate
+        REAL(8), SAVE :: NacVane                                ! Current wind vane measurement (deg)
+        REAL(8), SAVE :: NacVaneOffset                          ! For offset control (unused)
         INTEGER, SAVE :: YawState                               ! Yawing left(-1), right(1), or stopped(0)
-        REAL(4)       :: WindDirCosF, WindDirSinF, WindDirF     ! Filtered wind direction (deg)
-        REAL(4)       :: WindDir                                ! Wind direction (deg)
-        REAL(4)       :: WindDir_n                              ! Update wind direction after accounting for offset (deg)
-        REAL(4), SAVE :: Y_Err                                  ! Yaw error (deg)
-        REAL(4)       :: YawRateCom                             ! Commanded yaw rate
-        REAL(4)       :: deadband                               ! Allowable yaw error deadband (rad)
+        REAL(8)       :: WindDirCosF, WindDirSinF, WindDirF     ! Filtered wind direction (deg)
+        REAL(8)       :: WindDir                                ! Wind direction (deg)
+        REAL(8)       :: WindDir_n                              ! Update wind direction after accounting for offset (deg)
+        REAL(8), SAVE :: Y_Err                                  ! Yaw error (deg)
+        REAL(8)       :: YawRateCom                             ! Commanded yaw rate
+        REAL(8)       :: deadband                               ! Allowable yaw error deadband (rad)
         
         IF (CntrPar%Y_ControlMode == 1) THEN
 

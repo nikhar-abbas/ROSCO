@@ -63,7 +63,7 @@ RootName = TRANSFER(avcOUTNAME, RootName)
 CALL ReadAvrSWAP(avrSWAP, LocalVar)
 CALL SetParameters(avrSWAP, aviFAIL, accINFILE, ErrMsg, SIZE(avcMSG), CntrPar, LocalVar, objInst, PerfData)
 CALL PreFilterMeasuredSignals(CntrPar, LocalVar, objInst)
-CALL WindSpeedEstimator(LocalVar, CntrPar, objInst, PerfData)
+CALL WindSpeedEstimator(LocalVar, CntrPar, objInst, PerfData, DebugVar)
 
 IF ((LocalVar%iStatus >= 0) .AND. (aviFAIL >= 0))  THEN  ! Only compute control calculations if no error has occurred and we are not on the last time step
     CALL StateMachine(CntrPar, LocalVar)

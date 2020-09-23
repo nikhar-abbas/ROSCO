@@ -33,6 +33,7 @@ TYPE, PUBLIC :: ControlParameters
     REAL(8)                             :: F_SSCornerFreq               ! Setpoint Smoother mode {0: no setpoint smoothing, 1: introduce setpoint smoothing}
     REAL(8)                             :: F_FlCornerFreq               ! Corner frequency (-3dB point) in the second order low pass filter of the tower-top fore-aft motion for floating feedback control [rad/s].
     REAL(8)                             :: F_FlDamping                  ! Damping constant in the first order low pass filter of the tower-top fore-aft motion for floating feedback control [-].
+    REAL(8)                             :: F_YawErr                ! Corner low pass filter corner frequency for yaw controller [rad/s]    
     REAL(8)                             :: F_FlpCornerFreq              ! Corner frequency (-3dB point) in the second order low pass filter of the blade root bending moment for flap control [rad/s].
     REAL(8)                             :: F_FlpDamping                 ! Damping constant in the first order low pass filter of the blade root bending moment for flap control[-].
 
@@ -96,9 +97,17 @@ TYPE, PUBLIC :: ControlParameters
     REAL(8), DIMENSION(:), ALLOCATABLE  :: WE_FOPoles                   ! First order system poles
 
     INTEGER(4)                          :: Y_ControlMode                ! Yaw control mode {0: no yaw control, 1: yaw rate control, 2: yaw-by-IPC}
-
+    REAL(8)                             :: Y_uSwitch                    ! Wind speed to switch between Y_ErrThresh. If zero, only the first value of Y_ErrThresh is used [rad]
+    REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_ErrThresh                  ! Error threshold [rad]. Turbine begins to yaw when it passes this. (104.71975512) -- 1.745329252
+    REAL(8)                             :: Y_Rate                       ! Yaw rate [rad/s]
+    REAL(8)                             :: Y_MErrSet                    ! Constant yaw measurement error offset (for wake stearing) [rad]
+    REAL(8)                             :: Y_IPC_IntSat                 ! Integrator saturation (maximum signal amplitude contrbution to pitch from yaw-by-IPC)
     INTEGER(4)                          :: Y_IPC_n                      ! Number of controller gains (yaw-by-IPC)
-
+    REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_IPC_KP                     ! Yaw-by-IPC proportional controller gain Kp
+    REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_IPC_KI                     ! Yaw-by-IPC integral controller gain Ki
+    REAL(8)                             :: Y_IPC_omegaLP                ! Low-pass filter corner frequency for the Yaw-by-IPC controller to filtering the yaw alignment error, [rad/s].
+    REAL(8)                             :: Y_IPC_zetaLP                 ! Low-pass filter damping factor for the Yaw-by-IPC controller to filtering the yaw alignment error, [-].
+    
     
     INTEGER(4)                          :: PS_Mode                      ! Pitch saturation mode {0: no peak shaving, 1: implement pitch saturation}
     INTEGER(4)                          :: PS_BldPitchMin_N             ! Number of values in minimum blade pitch lookup table (should equal number of values in PS_WindSpeeds and PS_BldPitchMin)
@@ -187,10 +196,19 @@ TYPE, PUBLIC :: LocalVariables
     REAL(8)                             :: Y_YawEndT                    ! Yaw end time [s]. Indicates the time up until which yaw is active with a fixed rate                       ! Measured yaw error, measured + setpoint [rad].
     REAL(8)                             :: Y_fN                         ! Yaw direction, from north [rad]
     REAL(8)                             :: Y_Angle                      ! Yaw angle [deg]
+    REAL(8)                             :: Nac_YawNorth                 ! Nacelle yaw angle from north
+    REAL(8)                             :: Y_MErrSet                    ! Nacelle yaw measurement error
     LOGICAL(1)                          :: SD                           ! Shutdown, .FALSE. if inactive, .TRUE. if active
     REAL(8)                             :: Fl_PitCom                           ! Shutdown, .FALSE. if inactive, .TRUE. if active
     REAL(8)                             :: NACIMU_FA_AccF
     REAL(8)                             :: Flp_Angle(3)                 ! Flap Angle (rad)
+    
+    ! TEMP - for YAW API
+    REAL(8) :: WindDir
+    REAL(8) :: NacVane
+    REAL(8) :: Yaw_err
+    REAL(8) :: YawRateCom
+    
     END TYPE LocalVariables
 
 TYPE, PUBLIC :: ObjectInstances

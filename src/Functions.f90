@@ -441,7 +441,7 @@ CONTAINS
 !-------------------------------------------------------------------------------------------------------------------------------
     REAL FUNCTION wrap_180(x) 
     ! Function modifies input angle, x, such that -180<=x<=180, preventing windup
-        REAL(4), INTENT(IN) :: x         ! angle, degrees
+        REAL(8), INTENT(IN) :: x         ! angle, degrees
 
         IF (x .le. -180.0) THEN
             wrap_180 = x + 360.0
@@ -455,7 +455,7 @@ CONTAINS
 !-------------------------------------------------------------------------------------------------------------------------------
     REAL FUNCTION wrap_360(x) 
     ! Function modifies input angle, x, such that 0<=x<=360, preventing windup
-        REAL(4), INTENT(IN) :: x         ! angle, degrees
+        REAL(8), INTENT(IN) :: x         ! angle, degrees
 
         IF (x .lt. 0.0) THEN
             wrap_360 = x + 360.0
