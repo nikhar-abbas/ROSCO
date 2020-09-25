@@ -684,6 +684,7 @@ CONTAINS
         TYPE(ControlParameters), INTENT(INOUT) :: CntrPar
         ! Local variables
         INTEGER :: i, istat, Ntimes
+        REAL(8) :: dummy
 
         WRITE(*,*) 'Reading commanded yaw offsets from '//TRIM(FileName)
         ! First pass: get number of times
@@ -692,7 +693,7 @@ CONTAINS
         OPEN(unit=YawOffsetHist, file=TRIM(FileName), status='old', action='read') 
         DO WHILE (istat == 0)
             Ntimes = Ntimes + 1
-            READ(YawOffsetHist, *, iostat=istat)
+            READ(YawOffsetHist, *, iostat=istat) dummy, dummy
         END DO
 
         ALLOCATE(CntrPar%Y_MErrTime(Ntimes))
