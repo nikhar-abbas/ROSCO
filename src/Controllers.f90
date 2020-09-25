@@ -224,7 +224,7 @@ CONTAINS
         REAL(8)       :: YawRateCom                             ! Commanded yaw rate
         REAL(8)       :: deadband                               ! Allowable yaw error deadband (rad)
         REAL(8)       :: Time                                   ! Current time
-        INTEGER, SAVE :: TimeIndex                              ! Index i: commanded yaw error is interpolated between i and i+1
+        INTEGER, SAVE :: Tidx                                   ! Index i: commanded yaw error is interpolated between i and i+1
         
         IF (CntrPar%Y_ControlMode == 1) THEN
 
@@ -235,23 +235,30 @@ CONTAINS
             IF (LocalVar%iStatus == 0) THEN
                 Yaw = LocalVar%Nac_YawNorth
                 YawState = 0
-                TimeIndex = 0
+                Tidx = 1
             ENDIF
             
             ! Compute wind vane
             NacVane = wrap_180(WindDir - Yaw)      ! Measured yaw error 
             
             ! Update commanded offset if needed
-            Time = avrSWAP(2)
-            !IF (SIZE(CntrPar%Y_MErrSet) > 1) THEN
-            !    ! Interpolate
-            !    Time = avrSWAP(2)
-            !    DO WHILE (TimeIndex < SIZE(CntrPar%Y_MErrSet)) .and. &
-            !             ((Time .lt. YawHistTime(TimeIndex) &
-            !              .or. (Time .ge. YawHistTime(TimeIndex+1))
-            !        TimeIndex = TimeIndex + 1
-            !    END DO
-            !END IF
+            IF (ALLOCATED(CntrPar%Y_MErrHist)) THEN
+                ! Interpolate
+                Time = avrSWAP(2)
+                DO WHILE ((Tidx < SIZE(CntrPar%Y_MErrHist)-1) .and. &
+                          (Time .gt. CntrPar%Y_MErrTime(Tidx+1)))
+                    Tidx = Tidx + 1
+                END DO
+                CntrPar%Y_MErrSet = CntrPar%Y_MErrHist(Tidx) &
+                        + (CntrPar%Y_MErrHist(Tidx+1)-CntrPar%Y_MErrHist(Tidx)) / &
+                          (CntrPar%Y_MErrTime(Tidx+1)-CntrPar%Y_MErrTime(Tidx)) * &
+                          (Time - CntrPar%Y_MErrTime(Tidx))
+                !WRITE(*,'(a,f10.4,a,a,f10.4,a,f10.4)') &
+                !        't=',Time,' : ', &
+                !        'interp btwn',CntrPar%Y_MErrTime(Tidx), &
+                !        ', ',CntrPar%Y_MErrTime(Tidx+1), &
+                !        ' = ',CntrPar%Y_MErrSet
+            END IF
 
             ! Compute/apply offset
             NacVaneOffset = NacVane - CntrPar%Y_MErrSet ! (deg)
