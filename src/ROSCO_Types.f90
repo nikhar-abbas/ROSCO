@@ -101,6 +101,8 @@ TYPE, PUBLIC :: ControlParameters
     REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_ErrThresh                  ! Error threshold [rad]. Turbine begins to yaw when it passes this. (104.71975512) -- 1.745329252
     REAL(8)                             :: Y_Rate                       ! Yaw rate [rad/s]
     REAL(8)                             :: Y_MErrSet                    ! Yaw measurement error offset (for wake steering) [rad]
+    REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_MErrHist                   ! History of desired yaw offsets [rad]
+    REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_MErrTime                   ! Times corresponding to history of desired yaw offsets
     REAL(8)                             :: Y_IPC_IntSat                 ! Integrator saturation (maximum signal amplitude contrbution to pitch from yaw-by-IPC)
     INTEGER(4)                          :: Y_IPC_n                      ! Number of controller gains (yaw-by-IPC)
     REAL(8), DIMENSION(:), ALLOCATABLE  :: Y_IPC_KP                     ! Yaw-by-IPC proportional controller gain Kp

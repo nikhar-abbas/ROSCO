@@ -663,7 +663,7 @@ CONTAINS
 
         CHARACTER(1024),         INTENT(IN   ) :: TempStr
         TYPE(ControlParameters), INTENT(INOUT) :: CntrPar
-
+        ! Local variables
         INTEGER :: istat
         REAL(8) :: testval
 
@@ -671,7 +671,6 @@ CONTAINS
         IF ( istat /= 0 ) THEN
             CALL ReadOffsetsFile(TempStr,CntrPar)
         ELSE
-           !ALLOCATE(CntrPar%Y_MErrSet(1))
             CntrPar%Y_MErrSet = testval
         END IF
     END SUBROUTINE ReadYawOffset
@@ -684,10 +683,29 @@ CONTAINS
         CHARACTER(1024),         INTENT(IN   ) :: FileName
         TYPE(ControlParameters), INTENT(INOUT) :: CntrPar
         ! Local variables
-        INTEGER(4)                  :: i ! iteration index
+        INTEGER :: i, istat, Ntimes
 
-        WRITE(*,*) 'THIS IS A STUB'
-       !ALLOCATE(CntrPar%Y_MErrSet(1))
-        CntrPar%Y_MErrSet = 0.0
+        WRITE(*,*) 'Reading commanded yaw offsets from '//TRIM(FileName)
+        ! First pass: get number of times
+        Ntimes = -1
+        istat = 0
+        OPEN(unit=YawOffsetHist, file=TRIM(FileName), status='old', action='read') 
+        DO WHILE (istat == 0)
+            Ntimes = Ntimes + 1
+            READ(YawOffsetHist, *, iostat=istat)
+        END DO
+
+        ALLOCATE(CntrPar%Y_MErrTime(Ntimes))
+        ALLOCATE(CntrPar%Y_MErrHist(Ntimes))
+
+        ! Second pass: read the time history
+        REWIND(YawOffsetHist)
+        DO i=1,Ntimes
+            READ(YawOffsetHist, *) CntrPar%Y_MErrTime(i), CntrPar%Y_MErrHist(i)
+        END DO
+
+        CLOSE(YawOffsetHist)
+
+        CntrPar%Y_MErrSet = CntrPar%Y_MErrHist(1)
     END SUBROUTINE ReadOffsetsFile
 END MODULE ReadSetParameters
