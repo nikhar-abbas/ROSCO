@@ -40,6 +40,7 @@ CONTAINS
         INTEGER(4), PARAMETER                   :: UnControllerParameters = 89  ! Unit number to open file
         TYPE(ControlParameters), INTENT(INOUT)  :: CntrPar                      ! Control parameter type
        
+        CHARACTER(1024)                         :: TempStr                      ! Temporary string for reading either a float or filename for Y_MErrSet
 
         OPEN(unit=UnControllerParameters, file=accINFILE(1), status='old', action='read')
         
@@ -166,7 +167,9 @@ CONTAINS
         ALLOCATE(CntrPar%Y_ErrThresh(2))
         READ(UnControllerParameters, *) CntrPar%Y_ErrThresh
         READ(UnControllerParameters, *) CntrPar%Y_Rate
-        READ(UnControllerParameters, *) CntrPar%Y_MErrSet
+       !READ(UnControllerParameters, *) CntrPar%Y_MErrSet
+        READ(UnControllerParameters, *) TempStr
+        CALL ReadYawOffset(TempStr,CntrPar)
         READ(UnControllerParameters, *) CntrPar%Y_IPC_IntSat
         READ(UnControllerParameters, *) CntrPar%Y_IPC_n
         ALLOCATE(CntrPar%Y_IPC_KP(CntrPar%Y_IPC_n))
@@ -652,4 +655,39 @@ CONTAINS
         END DO
     
     END SUBROUTINE ReadCpFile
+    ! -----------------------------------------------------------------------------------
+    ! Attempt to read a constant value for Y_MErrSet, otherwise assume that the
+    ! input is a filename
+    SUBROUTINE ReadYawOffset(TempStr,CntrPar)
+        USE ROSCO_Types, ONLY : ControlParameters
+
+        CHARACTER(1024),         INTENT(IN   ) :: TempStr
+        TYPE(ControlParameters), INTENT(INOUT) :: CntrPar
+
+        INTEGER :: istat
+        REAL(8) :: testval
+
+        READ(TempStr,*,iostat=istat) testval
+        IF ( istat /= 0 ) THEN
+            CALL ReadOffsetsFile(TempStr,CntrPar)
+        ELSE
+           !ALLOCATE(CntrPar%Y_MErrSet(1))
+            CntrPar%Y_MErrSet = testval
+        END IF
+    END SUBROUTINE ReadYawOffset
+    ! -----------------------------------------------------------------------------------
+    ! Read time history of desired yaw offset (optional) to set Y_MErrSet
+    SUBROUTINE ReadOffsetsFile(FileName,CntrPar)
+        USE ROSCO_Types, ONLY : ControlParameters
+
+        INTEGER(4), PARAMETER :: YawOffsetHist = 90
+        CHARACTER(1024),         INTENT(IN   ) :: FileName
+        TYPE(ControlParameters), INTENT(INOUT) :: CntrPar
+        ! Local variables
+        INTEGER(4)                  :: i ! iteration index
+
+        WRITE(*,*) 'THIS IS A STUB'
+       !ALLOCATE(CntrPar%Y_MErrSet(1))
+        CntrPar%Y_MErrSet = 0.0
+    END SUBROUTINE ReadOffsetsFile
 END MODULE ReadSetParameters

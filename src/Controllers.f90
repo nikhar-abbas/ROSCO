@@ -223,6 +223,8 @@ CONTAINS
         REAL(8), SAVE :: Y_Err                                  ! Yaw error (deg)
         REAL(8)       :: YawRateCom                             ! Commanded yaw rate
         REAL(8)       :: deadband                               ! Allowable yaw error deadband (rad)
+        REAL(8)       :: Time                                   ! Current time
+        INTEGER, SAVE :: TimeIndex                              ! Index i: commanded yaw error is interpolated between i and i+1
         
         IF (CntrPar%Y_ControlMode == 1) THEN
 
@@ -233,11 +235,24 @@ CONTAINS
             IF (LocalVar%iStatus == 0) THEN
                 Yaw = LocalVar%Nac_YawNorth
                 YawState = 0
+                TimeIndex = 0
             ENDIF
             
             ! Compute wind vane
             NacVane = wrap_180(WindDir - Yaw)      ! Measured yaw error 
             
+            ! Update commanded offset if needed
+            Time = avrSWAP(2)
+            !IF (SIZE(CntrPar%Y_MErrSet) > 1) THEN
+            !    ! Interpolate
+            !    Time = avrSWAP(2)
+            !    DO WHILE (TimeIndex < SIZE(CntrPar%Y_MErrSet)) .and. &
+            !             ((Time .lt. YawHistTime(TimeIndex) &
+            !              .or. (Time .ge. YawHistTime(TimeIndex+1))
+            !        TimeIndex = TimeIndex + 1
+            !    END DO
+            !END IF
+
             ! Compute/apply offset
             NacVaneOffset = NacVane - CntrPar%Y_MErrSet ! (deg)
             
