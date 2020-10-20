@@ -244,20 +244,7 @@ CONTAINS
             ! Update commanded offset if needed
             IF (ALLOCATED(CntrPar%Y_MErrHist)) THEN
                 ! Interpolate
-                Time = avrSWAP(2)
-                DO WHILE ((Tidx < SIZE(CntrPar%Y_MErrHist)-1) .and. &
-                          (Time .gt. CntrPar%Y_MErrTime(Tidx+1)))
-                    Tidx = Tidx + 1
-                END DO
-                CntrPar%Y_MErrSet = CntrPar%Y_MErrHist(Tidx) &
-                        + (CntrPar%Y_MErrHist(Tidx+1)-CntrPar%Y_MErrHist(Tidx)) / &
-                          (CntrPar%Y_MErrTime(Tidx+1)-CntrPar%Y_MErrTime(Tidx)) * &
-                          (Time - CntrPar%Y_MErrTime(Tidx))
-                !WRITE(*,'(a,f10.4,a,a,f10.4,a,f10.4)') &
-                !        't=',Time,' : ', &
-                !        'interp btwn',CntrPar%Y_MErrTime(Tidx), &
-                !        ', ',CntrPar%Y_MErrTime(Tidx+1), &
-                !        ' = ',CntrPar%Y_MErrSet
+                CntrPar%Y_MErrSet = interp1d(CntrPar%Y_MErrTime, CntrPar%Y_MErrHist, LocalVar%Time)
             END IF
 
             ! Compute/apply offset
