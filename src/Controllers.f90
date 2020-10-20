@@ -249,9 +249,8 @@ CONTAINS
 
             ! Compute/apply offset
             NacVaneOffset = NacVane - CntrPar%Y_MErrSet ! (deg)
-            
             ! Update filtered wind direction
-            WindDir_n = wrap_360(WindDir - CntrPar%Y_MErrSet) ! (deg)
+            WindDir_n = wrap_360(NacVane - NacVaneOffset) ! (deg)
             WindDirCosF = LPFilter(cos(WindDir_n*D2R), LocalVar%DT, CntrPar%F_YawErr, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
             WindDirSinF = LPFilter(sin(WindDir_n*D2R), LocalVar%DT, CntrPar%F_YawErr, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
             WindDirF = wrap_360(atan2(WindDirSinF, WindDirCosF) * R2D) ! (deg)
