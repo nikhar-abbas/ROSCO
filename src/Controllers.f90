@@ -240,21 +240,22 @@ CONTAINS
             
             ! Compute wind vane
             NacVane = wrap_180(WindDir - Yaw)      ! Measured yaw error 
-            
+
             ! Update commanded offset if needed
             IF (ALLOCATED(CntrPar%Y_MErrHist)) THEN
                 ! Interpolate
                 CntrPar%Y_MErrSet = interp1d(CntrPar%Y_MErrTime, CntrPar%Y_MErrHist, LocalVar%Time)
             END IF
-
+            
             ! Compute/apply offset
-            NacVaneOffset = NacVane - CntrPar%Y_MErrSet ! (deg)
+            NacVaneOffset = CntrPar%Y_MErrSet ! (deg) # Offset from setpoint
+
             ! Update filtered wind direction
-            WindDir_n = wrap_360(NacVane - NacVaneOffset) ! (deg)
+            WindDir_n = wrap_360(WindDir - NacVaneOffset) ! (deg)
             WindDirCosF = LPFilter(cos(WindDir_n*D2R), LocalVar%DT, CntrPar%F_YawErr, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
             WindDirSinF = LPFilter(sin(WindDir_n*D2R), LocalVar%DT, CntrPar%F_YawErr, LocalVar%iStatus, .FALSE., objInst%instLPF) ! (-)
             WindDirF = wrap_360(atan2(WindDirSinF, WindDirCosF) * R2D) ! (deg)
-
+            
             ! ---- Now get into the guts of the control ----
             ! Yaw error
             Y_Err = wrap_180(WindDirF - Yaw)
