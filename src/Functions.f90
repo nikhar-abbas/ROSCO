@@ -531,6 +531,7 @@ CONTAINS
         DebugOutStr18  = 'WE_lambda';    DebugOutUni18  = '(rad/s)';   DebugOutData(18)  = DebugVar%WE_lambda
         DebugOutStr19  = 'WE_F12';       DebugOutUni19  = '(-)';       DebugOutData(19)  = DebugVar%WE_F12
         DebugOutStr20  = 'WE_F13';       DebugOutUni20  = '(-)';       DebugOutData(20)  = DebugVar%WE_F13
+        ! Yaw
         DebugOutStr21   = 'YawRateCom';    DebugOutUni21 = '(-)';      DebugOutData(21)   = DebugVar%YawRateCom
         DebugOutStr22   = 'WindDir';       DebugOutUni22 = '(-)';      DebugOutData(22)   = DebugVar%WindDir
         DebugOutStr23   = 'WindDirF';      DebugOutUni23 = '(-)';      DebugOutData(23)   = DebugVar%WindDirF
