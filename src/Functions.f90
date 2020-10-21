@@ -409,7 +409,7 @@ CONTAINS
         
         ! Lookup
         CPfunction = exp(-CP(1)/lambda)*(CP(2)/lambda-CP(3))+CP(4)*lambda
-        CPfunction = saturate(CPfunction, 0.001, 1.0)
+        CPfunction = saturate(CPfunction, 0.001D0, 1.0D0)
         
     END FUNCTION CPfunction
 !-------------------------------------------------------------------------------------------------------------------------------
@@ -587,6 +587,11 @@ CONTAINS
                 ENDIF
             END IF
             
+        END IF
+
+        ! Write debug files
+        IF (CntrPar%LoggingLevel > 0) THEN
+            WRITE (UnDb,FmtDat)  LocalVar%Time, DebugOutData
         END IF
 
         IF (CntrPar%LoggingLevel > 1) THEN
