@@ -196,7 +196,7 @@ CONTAINS
         avrSWAP(47) = LocalVar%VS_LastGenTrq   ! Demanded generator torque
     END SUBROUTINE VariableSpeedControl
 !-------------------------------------------------------------------------------------------------------------------------------
-    SUBROUTINE YawRateControl(avrSWAP, CntrPar, LocalVar, objInst)
+    SUBROUTINE YawRateControl(avrSWAP, CntrPar, LocalVar, objInst, DebugVar)
         ! Yaw rate controller
         !       Y_ControlMode = 0, No yaw control
         !       Y_ControlMode = 1, Yaw rate control using yaw drive
@@ -204,13 +204,14 @@ CONTAINS
 
         ! TODO: Lots of R2D->D2R, this should be cleaned up.
         ! TODO: The constant offset implementation is sort of circular here as a setpoint is already being defined in SetVariablesSetpoints. This could also use cleanup
-        USE ROSCO_Types, ONLY : ControlParameters, LocalVariables, ObjectInstances
+        USE ROSCO_Types, ONLY : ControlParameters, LocalVariables, ObjectInstances, DebugVariables
     
         REAL(C_FLOAT), INTENT(INOUT) :: avrSWAP(*) ! The swap array, used to pass data to, and receive data from, the DLL controller.
     
         TYPE(ControlParameters), INTENT(INOUT)    :: CntrPar
         TYPE(LocalVariables), INTENT(INOUT)       :: LocalVar
         TYPE(ObjectInstances), INTENT(INOUT)      :: objInst
+        TYPE(DebugVariables), INTENT(INOUT)       :: DebugVar
         
         ! Allocate Variables
         REAL(8), SAVE :: Yaw                                    ! Current yaw command--separate from YawPos--that dictates the commanded yaw position and should stay fixed for YawState==0; if the input YawPos is used, then it effectively allows the nacelle to freely rotate rotate
@@ -309,10 +310,12 @@ CONTAINS
             LocalVar%Y_Angle = Yaw
 
             ! Save for debug
-            LocalVar%YawRateCom = YawRateCom
-            LocalVar%WindDir = WindDir
-            LocalVar%NacVane = NacVane
-            LocalVar%Yaw_err = Y_Err
+            DebugVar%YawRateCom = YawRateCom
+            DebugVar%WindDir = WindDir
+            DebugVar%WindDirF = WindDirF
+            DebugVar%NacVane = NacVane
+            DebugVar%NacVaneOffset = NacVaneOffset
+            DebugVar%Yaw_err = Y_Err
 
         END IF
     END SUBROUTINE YawRateControl

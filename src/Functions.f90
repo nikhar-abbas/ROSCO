@@ -491,17 +491,21 @@ CONTAINS
         CHARACTER(10)                               :: DebugOutStr1,  DebugOutStr2, DebugOutStr3, DebugOutStr4, DebugOutStr5, &
                                                          DebugOutStr6, DebugOutStr7, DebugOutStr8, DebugOutStr9, DebugOutStr10, &
                                                          DebugOutStr11, DebugOutStr12, DebugOutStr13, DebugOutStr14, DebugOutStr15, & 
-                                                         DebugOutStr16, DebugOutStr17, DebugOutStr18, DebugOutStr19, DebugOutStr20                                                           
+                                                         DebugOutStr16, DebugOutStr17, DebugOutStr18, DebugOutStr19, DebugOutStr20, &    
+                                                         DebugOutStr21, DebugOutStr22, DebugOutStr23, DebugOutStr24, DebugOutStr25, &
+                                                         DebugOutStr26                                                       
         CHARACTER(10)                               :: DebugOutUni1,  DebugOutUni2, DebugOutUni3, DebugOutUni4, DebugOutUni5, &
                                                          DebugOutUni6, DebugOutUni7, DebugOutUni8, DebugOutUni9, DebugOutUni10, &
                                                          DebugOutUni11, DebugOutUni12, DebugOutUni13, DebugOutUni14, DebugOutUni15, & 
-                                                         DebugOutUni16, DebugOutUni17, DebugOutUni18, DebugOutUni19, DebugOutUni20 
+                                                         DebugOutUni16, DebugOutUni17, DebugOutUni18, DebugOutUni19, DebugOutUni20, &
+                                                         DebugOutUni21, DebugOutUni22, DebugOutUni23, DebugOutUni24, DebugOutUni25, & 
+                                                         DebugOutUni26
         CHARACTER(10), ALLOCATABLE                  :: DebugOutStrings(:), DebugOutUnits(:)
         REAL(8), ALLOCATABLE                        :: DebugOutData(:)
 
         ! Set up Debug Strings and Data
         ! Note that Debug strings have 10 character limit
-        nDebugOuts = 20
+        nDebugOuts = 26
         ALLOCATE(DebugOutData(nDebugOuts))
         !                 Header                            Unit                                Variable
         ! Filters
@@ -527,6 +531,12 @@ CONTAINS
         DebugOutStr18  = 'WE_lambda';    DebugOutUni18  = '(rad/s)';   DebugOutData(18)  = DebugVar%WE_lambda
         DebugOutStr19  = 'WE_F12';       DebugOutUni19  = '(-)';       DebugOutData(19)  = DebugVar%WE_F12
         DebugOutStr20  = 'WE_F13';       DebugOutUni20  = '(-)';       DebugOutData(20)  = DebugVar%WE_F13
+        DebugOutStr21   = 'YawRateCom';    DebugOutUni21 = '(-)';      DebugOutData(21)   = DebugVar%YawRateCom
+        DebugOutStr22   = 'WindDir';       DebugOutUni22 = '(-)';      DebugOutData(22)   = DebugVar%WindDir
+        DebugOutStr23   = 'WindDirF';      DebugOutUni23 = '(-)';      DebugOutData(23)   = DebugVar%WindDirF
+        DebugOutStr24   = 'NacVane';       DebugOutUni24 = '(-)';      DebugOutData(24)   = DebugVar%NacVane
+        DebugOutStr25   = 'NacVaneOffset'; DebugOutUni25 = '(-)';      DebugOutData(25)   = DebugVar%NacVaneOffset
+        DebugOutStr26   = 'Yaw_err';       DebugOutUni26 = '(-)';      DebugOutData(26)   = DebugVar%Yaw_err
 
         Allocate(DebugOutStrings(nDebugOuts))
         Allocate(DebugOutUnits(nDebugOuts))
@@ -534,12 +544,17 @@ CONTAINS
                                                 DebugOutStr5, DebugOutStr6, DebugOutStr7, DebugOutStr8, &
                                                 DebugOutStr9, DebugOutStr10, DebugOutStr11, DebugOutStr12, &
                                                 DebugOutStr13, DebugOutStr14, DebugOutStr15, DebugOutStr16, &
-                                                DebugOutStr17, DebugOutStr18, DebugOutStr19, DebugOutStr20]
+                                                DebugOutStr17, DebugOutStr18, DebugOutStr19, DebugOutStr20, &
+                                                DebugOutStr21, DebugOutStr22, DebugOutStr23, DebugOutStr24, &
+                                                DebugOutStr25, DebugOutStr26]
+
         DebugOutUnits =     [CHARACTER(10)  :: DebugOutUni1, DebugOutUni2, DebugOutUni3, DebugOutUni4, &
                                                 DebugOutUni5, DebugOutUni6, DebugOutUni7, DebugOutUni8, &
                                                 DebugOutUni9, DebugOutUni10, DebugOutUni11, DebugOutUni12, &
                                                 DebugOutUni13, DebugOutUni14, DebugOutUni15, DebugOutUni1, &
-                                                DebugOutUni17, DebugOutUni18, DebugOutUni19, DebugOutUni20]
+                                                DebugOutUni17, DebugOutUni18, DebugOutUni19, DebugOutUni20, &
+                                                DebugOutUni21, DebugOutUni22, DebugOutUni23, DebugOutUni24, &
+                                                DebugOutUni25, DebugOutUni26]
         
         ! Initialize debug file
         IF (LocalVar%iStatus == 0)  THEN  ! .TRUE. if we're on the first call to the DLL
