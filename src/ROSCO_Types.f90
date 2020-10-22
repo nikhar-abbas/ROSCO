@@ -242,10 +242,12 @@ TYPE, PUBLIC :: DebugVariables
     REAL(8)                             :: WE_F13                         ! Torque that WSE uses, for debug purposes [-]
     REAL(8)                             :: YawRateCom
     REAL(8)                             :: WindDir
+    REAL(8)                             :: WindDir_n
     REAL(8)                             :: WindDirF
     REAL(8)                             :: NacVane
     REAL(8)                             :: NacVaneOffset
     REAL(8)                             :: Yaw_err
+    REAL(8)                             :: YawState
 
 END TYPE DebugVariables
 

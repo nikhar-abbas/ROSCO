@@ -493,24 +493,24 @@ CONTAINS
                                                          DebugOutStr11, DebugOutStr12, DebugOutStr13, DebugOutStr14, DebugOutStr15, & 
                                                          DebugOutStr16, DebugOutStr17, DebugOutStr18, DebugOutStr19, DebugOutStr20, &    
                                                          DebugOutStr21, DebugOutStr22, DebugOutStr23, DebugOutStr24, DebugOutStr25, &
-                                                         DebugOutStr26                                                       
+                                                         DebugOutStr26, DebugOutStr27, DebugOutStr28, DebugOutStr29, DebugOutStr30                                                        
         CHARACTER(10)                               :: DebugOutUni1,  DebugOutUni2, DebugOutUni3, DebugOutUni4, DebugOutUni5, &
                                                          DebugOutUni6, DebugOutUni7, DebugOutUni8, DebugOutUni9, DebugOutUni10, &
                                                          DebugOutUni11, DebugOutUni12, DebugOutUni13, DebugOutUni14, DebugOutUni15, & 
                                                          DebugOutUni16, DebugOutUni17, DebugOutUni18, DebugOutUni19, DebugOutUni20, &
                                                          DebugOutUni21, DebugOutUni22, DebugOutUni23, DebugOutUni24, DebugOutUni25, & 
-                                                         DebugOutUni26
+                                                         DebugOutUni26, DebugOutUni27, DebugOutUni28, DebugOutUni29, DebugOutUni30
         CHARACTER(10), ALLOCATABLE                  :: DebugOutStrings(:), DebugOutUnits(:)
         REAL(8), ALLOCATABLE                        :: DebugOutData(:)
 
         ! Set up Debug Strings and Data
         ! Note that Debug strings have 10 character limit
-        nDebugOuts = 26
+        nDebugOuts = 30
         ALLOCATE(DebugOutData(nDebugOuts))
         !                 Header                            Unit                                Variable
         ! Filters
-        DebugOutStr1   = 'FA_AccF';     DebugOutUni1   = '(m/s)';      DebugOutData(1)   = LocalVar%NacIMU_FA_AccF
-        DebugOutStr2   = 'FA_AccR';     DebugOutUni2   = '(rad/s^2)';  DebugOutData(2)   = LocalVar%NacIMU_FA_Acc
+        DebugOutStr1  = 'FA_AccF';      DebugOutUni1  = '(m/s)';       DebugOutData(1)  = LocalVar%NacIMU_FA_AccF
+        DebugOutStr2  = 'FA_AccR';      DebugOutUni2  = '(rad/s^2)';   DebugOutData(2)  = LocalVar%NacIMU_FA_Acc
         DebugOutStr3  = 'RotSpeed';     DebugOutUni3  = '(rad/s)';     DebugOutData(3)  = LocalVar%RotSpeed
         DebugOutStr4  = 'RotSpeedF';    DebugOutUni4  = '(rad/s)';     DebugOutData(4)  = LocalVar%RotSpeedF
         DebugOutStr5  = 'GenSpeed';     DebugOutUni5  = '(rad/s)';     DebugOutData(5)  = LocalVar%GenSpeed
@@ -532,12 +532,16 @@ CONTAINS
         DebugOutStr19  = 'WE_F12';       DebugOutUni19  = '(-)';       DebugOutData(19)  = DebugVar%WE_F12
         DebugOutStr20  = 'WE_F13';       DebugOutUni20  = '(-)';       DebugOutData(20)  = DebugVar%WE_F13
         ! Yaw
-        DebugOutStr21   = 'YawRateCom';    DebugOutUni21 = '(-)';      DebugOutData(21)   = DebugVar%YawRateCom
-        DebugOutStr22   = 'WindDir';       DebugOutUni22 = '(-)';      DebugOutData(22)   = DebugVar%WindDir
-        DebugOutStr23   = 'WindDirF';      DebugOutUni23 = '(-)';      DebugOutData(23)   = DebugVar%WindDirF
-        DebugOutStr24   = 'NacVane';       DebugOutUni24 = '(-)';      DebugOutData(24)   = DebugVar%NacVane
-        DebugOutStr25   = 'NacVaneOffset'; DebugOutUni25 = '(-)';      DebugOutData(25)   = DebugVar%NacVaneOffset
-        DebugOutStr26   = 'Yaw_err';       DebugOutUni26 = '(-)';      DebugOutData(26)   = DebugVar%Yaw_err
+        DebugOutStr21   = 'YawRateCom';    DebugOutUni21 = '(deg)';      DebugOutData(21)  = DebugVar%YawRateCom
+        DebugOutStr22   = 'WindDir';       DebugOutUni22 = '(deg)';      DebugOutData(22)  = DebugVar%WindDir
+        DebugOutStr23   = 'WindDir_n';     DebugOutUni23 = '(deg)';      DebugOutData(23)  = DebugVar%WindDir_n
+        DebugOutStr24   = 'WindDirF';      DebugOutUni24 = '(deg)';      DebugOutData(24)  = DebugVar%WindDirF
+        DebugOutStr25   = 'NacVane';       DebugOutUni25 = '(deg)';      DebugOutData(25)  = DebugVar%NacVane
+        DebugOutStr26   = 'NacVaneOffset'; DebugOutUni26 = '(deg)';      DebugOutData(26)  = DebugVar%NacVaneOffset
+        DebugOutStr27   = 'Yaw_err';       DebugOutUni27 = '(deg)';      DebugOutData(27)  = DebugVar%Yaw_err
+        DebugOutStr28   = 'Nac_YawNorth';  DebugOutUni28 = '(deg)';      DebugOutData(28)  = LocalVar%Nac_YawNorth
+        DebugOutStr29   = 'Y_Angle';       DebugOutUni29 = '(deg)';      DebugOutData(29)  = LocalVar%Y_Angle
+        DebugOutStr30   = 'YawState';      DebugOutUni30 = '(deg)';      DebugOutData(30)  = DebugVar%YawState
 
         Allocate(DebugOutStrings(nDebugOuts))
         Allocate(DebugOutUnits(nDebugOuts))
@@ -547,7 +551,8 @@ CONTAINS
                                                 DebugOutStr13, DebugOutStr14, DebugOutStr15, DebugOutStr16, &
                                                 DebugOutStr17, DebugOutStr18, DebugOutStr19, DebugOutStr20, &
                                                 DebugOutStr21, DebugOutStr22, DebugOutStr23, DebugOutStr24, &
-                                                DebugOutStr25, DebugOutStr26]
+                                                DebugOutStr25, DebugOutStr26, DebugOutStr27, DebugOutStr28, &
+                                                DebugOutStr29, DebugOutStr30]
 
         DebugOutUnits =     [CHARACTER(10)  :: DebugOutUni1, DebugOutUni2, DebugOutUni3, DebugOutUni4, &
                                                 DebugOutUni5, DebugOutUni6, DebugOutUni7, DebugOutUni8, &
@@ -555,7 +560,8 @@ CONTAINS
                                                 DebugOutUni13, DebugOutUni14, DebugOutUni15, DebugOutUni1, &
                                                 DebugOutUni17, DebugOutUni18, DebugOutUni19, DebugOutUni20, &
                                                 DebugOutUni21, DebugOutUni22, DebugOutUni23, DebugOutUni24, &
-                                                DebugOutUni25, DebugOutUni26]
+                                                DebugOutUni25, DebugOutUni26, DebugOutUni27, DebugOutUni28, &
+                                                DebugOutUni29, DebugOutUni30]
         
         ! Initialize debug file
         IF (LocalVar%iStatus == 0)  THEN  ! .TRUE. if we're on the first call to the DLL

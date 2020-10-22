@@ -306,16 +306,18 @@ CONTAINS
             ENDIF
 
             ! Output yaw rate command
-            avrSWAP(48) = YawRateCom       
+            avrSWAP(48)      = YawRateCom       
             LocalVar%Y_Angle = Yaw
 
             ! Save for debug
-            DebugVar%YawRateCom = YawRateCom
-            DebugVar%WindDir = WindDir
-            DebugVar%WindDirF = WindDirF
-            DebugVar%NacVane = NacVane
-            DebugVar%NacVaneOffset = NacVaneOffset
-            DebugVar%Yaw_err = Y_Err
+            DebugVar%YawRateCom     = YawRateCom
+            DebugVar%WindDir        = WindDir
+            DebugVar%WindDir_n      = WindDir_n
+            DebugVar%WindDirF       = WindDirF
+            DebugVar%NacVane        = NacVane
+            DebugVar%NacVaneOffset  = NacVaneOffset
+            DebugVar%Yaw_err        = Y_Err
+            DebugVar%YawState       = YawState
 
         END IF
     END SUBROUTINE YawRateControl
