@@ -349,9 +349,9 @@ CONTAINS
         ! Check validity of input parameters:
         !..............................................................................................................................
         
-        IF ((CntrPar%F_LPFType > 2.0) .OR. (CntrPar%F_LPFType < 1.0)) THEN
+        IF ((CntrPar%F_LPFType > 2.0) .OR. (CntrPar%F_LPFType < 0.0)) THEN
             aviFAIL = -1
-            ErrMsg  = 'F_LPFType must be 1 or 2.'
+            ErrMsg  = 'F_LPFType must be 0, 1 or 2.'
         ENDIF
         
         IF ((CntrPar%F_LPFDamping > 1.0) .OR. (CntrPar%F_LPFDamping < 0.0)) THEN

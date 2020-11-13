@@ -266,7 +266,14 @@ CONTAINS
         ELSEIF (CntrPar%F_LPFType == 2) THEN   
             LocalVar%GenSpeedF = SecLPFilter(LocalVar%GenSpeed, LocalVar%DT, CntrPar%F_LPFCornerFreq, CntrPar%F_LPFDamping, LocalVar%iStatus, .FALSE., objInst%instSecLPF) ! Second-order low-pass filter on generator speed
             LocalVar%RotSpeedF = SecLPFilter(LocalVar%RotSpeed, LocalVar%DT, CntrPar%F_LPFCornerFreq, CntrPar%F_LPFDamping, LocalVar%iStatus, .FALSE., objInst%instSecLPF) ! Second-order low-pass filter on generator speed
+        ELSE
+            IF (LocalVar%iStatus ==0) THEN
+                print *, 'No generator speed low-pass filter is selected in ROSCO (F_LPFType=0)'
+            ENDIF
+            LocalVar%GenSpeedF = LocalVar%GenSpeed
+            LocalVar%RotSpeedF = LocalVar%RotSpeed
         ENDIF
+        
         ! Apply Notch Fitler
         IF (CntrPar%F_NotchType == 1 .OR. CntrPar%F_NotchType == 3) THEN
             LocalVar%GenSpeedF = NotchFilter(LocalVar%GenSpeedF, LocalVar%DT, CntrPar%F_NotchCornerFreq, CntrPar%F_NotchBetaNumDen(1), CntrPar%F_NotchBetaNumDen(2), LocalVar%iStatus, .FALSE., objInst%instNotch)
