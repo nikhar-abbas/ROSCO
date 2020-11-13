@@ -20,6 +20,10 @@ Scripts/CompileDISCONHereCopyRun\.cmd
 *~
 .DS_Store
 *.u2d
+*.i90
+*.swp
+*slprj*
+*.slxc
 
 # vs code
 .vscode
