@@ -471,10 +471,11 @@ CONTAINS
 
         ! --- Floating Control ---
         IF (CntrPar%Fl_Mode > 0) THEN
-            IF (CntrPar%F_NotchType <= 1 .OR. CntrPar%F_NotchCornerFreq == 0.0) THEN
+            IF (CntrPar%F_NotchType <= 1 .OR. CntrPar%F_NotchCornerFreq == 0.0 .OR. CntrPar%F_FlHighPassFreq == 0.0 ) THEN
                 aviFAIL = -1
-                ErrMsg = 'F_NotchType and F_NotchCornerFreq must be specified for Fl_Mode greater than zero.'
+                ErrMsg = 'F_NotchType, F_NotchCornerFreq, and a must be specified for Fl_Mode greater than zero.'
             ENDIF
+
         ENDIF
         
         ! Abort if the user has not requested a pitch angle actuator (See Appendix A
