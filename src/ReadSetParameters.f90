@@ -366,9 +366,9 @@ CONTAINS
             ErrMsg  = 'Corner frequency of IPC actuator model must be positive, or set to 0 to disable.'
         ENDIF
         
-        IF (CntrPar%F_LPFCornerFreq <= 0.0) THEN
+        IF ((CntrPar%F_LPFCornerFreq <= 0.0) .AND. (CntrPar%F_LPFType > 0.0)) THEN
             aviFAIL = -1
-            ErrMsg  = 'CornerFreq must be greater than zero.'
+            ErrMsg  = 'CornerFreq must be greater than zero if F_LPFType > 0.'
         ENDIF
         
         IF ((CntrPar%IPC_ControlMode > 0) .AND. (CntrPar%Y_ControlMode > 1)) THEN
