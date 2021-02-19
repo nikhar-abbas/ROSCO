@@ -13,7 +13,7 @@ conda install -c conda-forge rosco
 ```
 Please note that if you do install using anaconda, the binary will be installed with all other package libraries in the anaconda "active environment path", which can be found by typing `conda info`.
 
-If you wish to compile ROSCO directly, this is made simple using [cmake](https://cmake.org/) on Unix based machines. Windows users can leverage [mingw](http://www.mingw.org/) to compile similarly. 
+If you wish to compile ROSCO directly, this is made simple using [cmake](https://cmake.org/) on Unix based machines. Windows users can leverage [mingw](http://www.mingw-w64.org/) to compile similarly. 
 
 ### Required Software to build ROSCO
 * Fortran compiler (GNU compiler version above 4.6.0 or Intel compiler version above 11)
